@@ -5,5 +5,23 @@
 </ion-header>
 
 <ion-content>
-<input type="file" (change)="fileChanged($event)">
+  <div class="camera"></div>
+
+  <input type="file" *ngIf="!imageKey" (change)="fileChanged($event)">
+
+  <ion-card *ngIf="imageKey">
+    <img src="https://ucarecdn.com/{{imageKey}}/" />
+
+    <ion-card-content>
+
+      <ion-textarea placeholder="Enter some description" [(ngModel)]="desc"></ion-textarea>
+      <ion-button shape="round" color="primary" (click)="createPost()">Share</ion-button>
+
+      <div *ngFor="let post of posts">
+        <ion-label>{{post.desc}}</ion-label>
+        <img src="https://ucarecdn.com/{{post.image}}/" alt="">
+      </div>
+    </ion-card-content>
+  </ion-card>
+
 </ion-content>
