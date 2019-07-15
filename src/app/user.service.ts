@@ -1,23 +1,37 @@
-import {Injectable} from '@angular/core';
+import { Injectable } from '@angular/core';
+import { AngularFireAuth } from '@angular/fire/auth'
 
 interface User {
-    username: string,
-    uid: string,
+  username: string,
+  uid: string,
 }
 
 @Injectable()
 export class UserService {
-    private user: User;
+  private user: User;
 
-    constructor(){
+  constructor(private afAuth: AngularFireAuth) {
 
+  }
+
+  setUser(user: User) {
+    this.user = user;
+  }
+
+  getUID() {
+    if (!this.user) {
+      if (this.afAuth.auth.currentUser) {
+        const user = this.afAuth.auth.currentUser
+        this.setUser({
+          username: user.email,
+          uid: user.uid
+        })
+        return user.uid;
+      } else {
+        throw new Error("User not logged in!")
+      }
+    } else {
+      return this.user.uid;
     }
-
-    setUser(user: User){
-        this.user = user;
-    }
-
-    getUID(){
-        return this.user.uid;
-    }
+  }
 }

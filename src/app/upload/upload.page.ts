@@ -1,8 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Http } from '@angular/http'
 import { AngularFirestore } from '@angular/fire/firestore';
 import { UserService } from '../user.service';
 import { firestore, User } from 'firebase';
+import * as firebase from 'firebase';
+
 
 @Component({
   selector: 'app-upload',
@@ -13,56 +15,96 @@ export class UploadPage implements OnInit {
 
   imageKey: string;
   desc: string;
-  posts: []
+  posts1 = [];
+  postid1: string;
+  storageRef = firebase.storage();
+  current_datetime = new Date();
+
+
+  @ViewChild('fileBtn') fileButton
 
   constructor(
     public http: Http,
     public afstore: AngularFirestore,
     public user: UserService,
-    ) { }
+  ) { }
 
   ngOnInit() {
   }
 
-  fileChanged(event){
-    const files = event.target.files;
-    console.log(files);
+  async fileChanged(event) {
+    const file = event.target.files[0];
+    const filestr = event.target.result;
+    console.log(file.name);
+    console.log(filestr);
 
-    const data = new FormData();
-    data.append('file',files[0]);
-    data.append('UPLOADCARE_STORE','1');
-    data.append('UPLOADCARE_PUB_KEY','e391c25c2efed3c13041');
 
-    this.http.post('https://upload.uploadcare.com/base/',data)
-    .subscribe( event => {
-      console.log(event);
-      this.imageKey = event.json().file;
+    this.storageRef
+    .ref(`pictures/upload/${file.name+ '#' + this.current_datetime.getTime()}`)
+    .put(file)
+    .then(snapshot => {
+      return snapshot.ref.getDownloadURL();
     })
+    .then(downloadURL => {
+      console.log(downloadURL);
+      this.imageKey = downloadURL;
+    })
+
+
+
+
+    // const data = new FormData();
+    // data.append('file', file);
+    // data.append('UPLOADCARE_STORE', '1');
+    // data.append('UPLOADCARE_PUB_KEY', 'e391c25c2efed3c13041');
+
+    // await this.http.post('https://upload.uploadcare.com/base/', data)
+    //   .subscribe(event => {
+    //     // console.log(event);
+    //     this.imageKey = event.json().file;
+    //   })
   }
 
-  createPost(){
+  async createPost() {
+
     const image = this.imageKey;
     const desc = this.desc;
 
+    // const ownerid = this.user.getUID();
+
+    await this.afstore.collection('posts').add({ image, desc })
+    .then(res => {
+      this.postid1 = res.id;
+      console.log(res.id)
+    });
+
+    const postid = this.postid1;
+
     this.afstore.doc(`users/${this.user.getUID()}`).update({
       posts: firestore.FieldValue.arrayUnion({
-        image,desc
+        postid
       })
     })
 
-    var docRef = this.afstore.doc(`users/${this.user.getUID()}`);
+    var docRef = this.afstore.collection('posts');
 
-    docRef.get().subscribe( doc => {
-      if(doc.exists){
-        console.log("Doc data is: ", doc.data().posts);
-        this.posts = doc.data().posts;
-      }else
-      {
+    await docRef.get().subscribe(posts2 => {
+      if (!posts2.empty) {
+        posts2.forEach(doc => {
+          console.log(doc)
+          this.posts1.push(doc.data());
+        })
+      } else {
         console.log("No such doc!");
       }
     }, err => {
       console.log("Error getting doc: ", err)
     })
+
+    this.imageKey = '';
   }
 
+  uploadFile(){
+    this.fileButton.nativeElement.click()
+  }
 }

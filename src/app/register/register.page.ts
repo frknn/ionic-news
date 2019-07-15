@@ -32,7 +32,7 @@ export class RegisterPage implements OnInit {
   async register() {
     const { username, password, cpassword } = this;
     if (password !== cpassword) {
-      // this.ShowAlert("Error!", "Passwords don't match!");
+      this.ShowAlert("Error!", "Passwords don't match!");
       return console.error("Passwords don't match!");
     }
     try {
@@ -54,7 +54,7 @@ export class RegisterPage implements OnInit {
 
     } catch (error) {
       console.dir(error);
-      // this.ShowAlert("Error!", error.message);
+      this.ShowAlert("Error!", error.message);
     }
   }
 

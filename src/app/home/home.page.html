@@ -5,40 +5,13 @@
 </ion-header>
 
 <ion-content>
+  <div class="cont" *ngFor="let post of userPosts">
+    <ion-card>
+      <img src="{{post.image}}" alt="">
+      <ion-card-header>
+        <ion-card-title>{{ post.desc }}</ion-card-title>
+      </ion-card-header>
+    </ion-card>
+  </div>
 
-  <ion-card>
-    <img src="https://cdn.pixabay.com/photo/2011/12/14/12/17/galaxy-11098_960_720.jpg" alt="">
-    <ion-card-header>
-      <ion-card-subtitle>Bilim</ion-card-subtitle>
-      <ion-card-title>Yeni bir nebula keşfedildi!</ion-card-title>
-    </ion-card-header>
-    <ion-card-content>
-      Galaksimizden 15 ışık yılı uzaklıkta yeni bir nebula keşfedildi. Bu nebula'da yaşam belirtileri olabileceği bilim
-      adamları tarafından aktarıldı.
-    </ion-card-content>
-  </ion-card>
-
-  <ion-card>
-    <img src="https://cdn.pixabay.com/photo/2011/12/14/12/17/galaxy-11098_960_720.jpg" alt="">
-    <ion-card-header>
-      <ion-card-subtitle>Bilim</ion-card-subtitle>
-      <ion-card-title>Yeni bir nebula keşfedildi!</ion-card-title>
-    </ion-card-header>
-    <ion-card-content>
-      Galaksimizden 15 ışık yılı uzaklıkta yeni bir nebula keşfedildi. Bu nebula'da yaşam belirtileri olabileceği bilim
-      adamları tarafından aktarıldı.
-    </ion-card-content>
-  </ion-card>
-
-  <ion-card>
-    <img src="https://cdn.pixabay.com/photo/2011/12/14/12/17/galaxy-11098_960_720.jpg" alt="">
-    <ion-card-header>
-      <ion-card-subtitle>Bilim</ion-card-subtitle>
-      <ion-card-title>Yeni bir nebula keşfedildi!</ion-card-title>
-    </ion-card-header>
-    <ion-card-content>
-      Galaksimizden 15 ışık yılı uzaklıkta yeni bir nebula keşfedildi. Bu nebula'da yaşam belirtileri olabileceği bilim
-      adamları tarafından aktarıldı.
-    </ion-card-content>
-  </ion-card>
 </ion-content>
