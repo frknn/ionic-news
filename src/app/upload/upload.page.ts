@@ -36,8 +36,6 @@ export class UploadPage implements OnInit {
     const file = event.target.files[0];
     const filestr = event.target.result;
     console.log(file.name);
-    console.log(filestr);
-
 
     this.storageRef
     .ref(`pictures/upload/${file.name+ '#' + this.current_datetime.getTime()}`)
@@ -75,8 +73,13 @@ export class UploadPage implements OnInit {
     await this.afstore.collection('posts').add({ image, desc })
     .then(res => {
       this.postid1 = res.id;
-      console.log(res.id)
+      console.log("Response id: ", res.id)
     });
+
+    this.afstore.doc(`posts/${this.postid1}`).update({
+      owner_id: this.user.getUID(),
+      owner_mail: this.user.getUsername()
+    })
 
     const postid = this.postid1;
 
