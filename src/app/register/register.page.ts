@@ -36,9 +36,9 @@ export class RegisterPage implements OnInit {
       return console.error("Passwords don't match!");
     }
     try {
-      const res = await this.afAuth.auth.createUserWithEmailAndPassword(username, password);
-      console.log(res);
-
+      const constEmail = "@mub.com";
+      let usernameWmail = username+constEmail;
+      const res = await this.afAuth.auth.createUserWithEmailAndPassword(usernameWmail, password);
       this.afstore.doc(`users/${res.user.uid}`).set({
         username
       })
