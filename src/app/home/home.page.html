@@ -7,10 +7,11 @@
 <ion-content>
   <div class="cont" *ngFor="let post of userPosts">
     <ion-card>
-      <img src="{{post.image}}" alt="">
-      <ion-card-header>
-        <ion-card-title>{{ post.desc }}</ion-card-title>
-      </ion-card-header>
+        <ion-img [src]="post.image" [alt]=""></ion-img>
+        <ion-card-header>
+          <ion-card-title>{{ post.desc }}</ion-card-title>
+          <ion-card-subtitle>Posted by {{post.owner_mail}}</ion-card-subtitle>
+        </ion-card-header>
     </ion-card>
   </div>
 

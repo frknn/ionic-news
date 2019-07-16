@@ -30,10 +30,10 @@ export class LoginPage implements OnInit {
     const { username, password } = this;
     try {
       const res = await this.afAuth.auth.signInWithEmailAndPassword(username, password);
-      if(res.user){
+      if (res.user) {
         this.user.setUser({
           username,
-          uid:res.user.uid
+          uid: res.user.uid
         });
         this.router.navigate(['/tabs']);
       }

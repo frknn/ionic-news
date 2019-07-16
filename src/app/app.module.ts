@@ -15,6 +15,7 @@ import { UserService } from './user.service';
 import { AngularFirestore, AngularFirestoreModule } from '@angular/fire/firestore';
 import { HttpModule } from '@angular/http';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { AuthService } from './auth.service';
 
 @NgModule({
   declarations: [AppComponent],
@@ -33,7 +34,8 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     SplashScreen,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     UserService,
-    AngularFirestore
+    AngularFirestore,
+    AuthService
   ],
   bootstrap: [AppComponent]
 })
