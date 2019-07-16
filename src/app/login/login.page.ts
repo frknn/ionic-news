@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { auth } from 'firebase/app';
-import {Router} from '@angular/router'
+import {Router} from '@angular/router';
+import { AlertController } from '@ionic/angular';
 import { UserService } from '../user.service';
 
 @Component({
@@ -17,6 +18,7 @@ export class LoginPage implements OnInit {
   constructor(
     public afAuth: AngularFireAuth,
     public router: Router,
+    public alertController: AlertController,
     public user:UserService
     ) { }
 
@@ -36,11 +38,31 @@ export class LoginPage implements OnInit {
         this.router.navigate(['/tabs']);
       }
     } catch (err) {
-      console.dir(err);
-      if (err.code === "auth/user-not-found") {
-        console.log("User not found!");
+      switch(err.code){
+        case "auth/wrong-password":
+          this.ShowAlert("Error!", "Kullanıcı adı veya şifre yanlış");
+          break;
+          case "auth/user-not-found":
+            this.ShowAlert("Error!", "Kullanıcı adı veya şifre yanlış");
+            console.dir(err);
+            break;
+          case "auth/invalid-email":
+            this.ShowAlert("Error!", "Kullanıcı adı veya şifre yanlış");
+            console.dir(err);
+            break;
+        default:
+          console.dir(err);
+          break;
       }
     }
 
+  }
+  async ShowAlert(header: string, message: string) {
+    const alert = await this.alertController.create({
+      header,
+      message,
+      buttons: ["OK!"]
+    })
+    await alert.present();
   }
 }

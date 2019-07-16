@@ -1,23 +1,42 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>NewsApp</ion-title>
+    <ion-title>Muhab</ion-title>
   </ion-toolbar>
 </ion-header>
-
-<ion-content>
-  <ion-list>
-
-    <ion-item>
-      <ion-label position="floating">Username</ion-label>
-      <ion-input type="text" [(ngModel)]="username"></ion-input>
-    </ion-item>
-
-    <ion-item>
-      <ion-label position="floating" >Password</ion-label>
-      <ion-input type="password" [(ngModel)]="password"></ion-input>
-    </ion-item>
-
-  </ion-list>
-
-  <ion-button fill="solid" expand="block" color="dark" (click)="login()">Login</ion-button>
+<ion-content padding  class="masters">
+  <ion-grid>
+    <ion-row>
+      <ion-col>
+          <ion-list>
+              <ion-item lines="none">
+                <div class="mx-auto w-50">
+                  <img src="../../assets/image/logo.png"/>
+                </div>
+              </ion-item>
+              <ion-item>
+                  <ion-label position="floating">Kullanıcı Adı</ion-label>
+                  <ion-input type="text" [(ngModel)]="username"></ion-input>
+                </ion-item>
+            
+                <ion-item>
+                  <ion-label position="floating" >Şifre</ion-label>
+                  <ion-input type="password" [(ngModel)]="password"></ion-input>
+                </ion-item>
+            </ion-list>
+        </ion-col>
+    </ion-row>
+        <ion-row>
+          <ion-col>
+              <ion-button fill="solid" expand="block" class="bg-info" (click)="login()">Giriş Yap</ion-button>
+            </ion-col>
+        </ion-row>
+        <ion-row class="text-center pt-3">
+          <ion-col>
+              <span class="ion-marin-top ion-text-center text-secondary">
+                  Üye değil misin? 
+                  <a href="/register" class="text-info">Kayıt Ol</a>
+              </span>
+          </ion-col>
+        </ion-row>
+</ion-grid>
 </ion-content>
