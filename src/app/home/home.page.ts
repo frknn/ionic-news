@@ -10,32 +10,33 @@ import { UserService } from '../user.service';
 export class HomePage implements OnInit {
 
   userPosts = [];
-  newPosts = []
 
   constructor(private afs: AngularFirestore, private user: UserService) {
-    this.afs.collection('posts').valueChanges()
-      .subscribe(posts3 => {
-        // this.userPosts.push(posts3);
-        if (posts3) {
-          // posts3.forEach(p => {
-          //     console.log(p)
-          //     this.userPosts.push(p);
-          // })
-          // this.userPosts.push(posts3[posts3.length-1])
-          // console.log(posts3[posts3.length - 1]);
-          this.userPosts = [];
-          posts3.forEach(p => {
-            this.userPosts.push(p);
-            // console.log("newPosts=", this.newPosts);
-            // this.userPosts = this.newPosts;
-          })
+    this.afs.collection('posts').valueChanges().subscribe(postlar => {
+      this.userPosts = postlar;
+    });
+    // .subscribe(posts3 => {
+    //   // this.userPosts.push(posts3);
+    //   if (posts3) {
+    //     console.log("Posts3 var: ", posts3);
+    //     // posts3.forEach(p => {
+    //     //     console.log(p)
+    //     //     this.userPosts.push(p);
+    //     // })
+    //     // this.userPosts.push(posts3[posts3.length-1])
+    //     // console.log(posts3[posts3.length - 1]);
+    //     this.userPosts = [];
+    //     posts3.forEach(p => {
+    //       console.log(p);
+    //       this.userPosts.push(p);
+    //     })
 
-        } else {
-          console.log("Couldn't get posts!");
-        }
-      }, err => {
-        console.log(err);
-      })
+    //   } else {
+    //     console.log("Couldn't get posts!");
+    //   }
+    // }, err => {
+    //   console.log(err);
+    // })
   }
 
   ngOnInit() {

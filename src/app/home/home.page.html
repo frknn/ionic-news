@@ -11,9 +11,11 @@
     <ion-card>
         <ion-img [src]="post.image" [alt]=""></ion-img>
         <ion-card-header>
-          <ion-card-title>{{ post.desc }}</ion-card-title>
+          <ion-card-title>{{ post.post_title }}</ion-card-title>
+          <ion-card-subtitle>Category: {{post.cat_of_post}}</ion-card-subtitle>
           <ion-card-subtitle>Posted by {{post.owner_mail}}</ion-card-subtitle>
         </ion-card-header>
+        <ion-card-content>{{post.desc}}</ion-card-content>
     </ion-card>
   </div>
 
