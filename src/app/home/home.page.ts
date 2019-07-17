@@ -25,7 +25,6 @@ export class HomePage implements OnInit {
           // console.log(posts3[posts3.length - 1]);
           this.userPosts = [];
           posts3.forEach(p => {
-            console.log(p);
             this.userPosts.push(p);
             // console.log("newPosts=", this.newPosts);
             // this.userPosts = this.newPosts;
