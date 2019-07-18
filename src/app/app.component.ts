@@ -11,13 +11,24 @@ import { AngularFireAuth } from '@angular/fire/auth';
   templateUrl: 'app.component.html'
 })
 export class AppComponent {
-  public appPages = [
+  public appPages = [];
+  /*
+    if you use sub item, you must add some element like below
   {
-    title: 'Home',
-    url: '/home',
-    icon: 'home'
-  }
-];
+    title: 'Kategoriler',
+    children:[
+      {
+        title:'Ionic',
+        url:'test/test',
+        icon:'logo-ionic'
+      },
+      {
+        title:'Google',
+        url:'test/test',
+        icon:'logo-google'
+      }
+    ]
+  } */
   isLogin = false;
   constructor(
     private platform: Platform,
@@ -26,15 +37,37 @@ export class AppComponent {
     public afAuth: AngularFireAuth
   ) {
     this.initializeApp();
-    this.afAuth.authState.subscribe(res => {
-      if (res && res.uid) {
-        this.isLogin = true;
-        this.appPages.push({title:"Profil",url:"/profile",icon:"person"});
-        this.appPages.push({title:"Çıkış",url:"/logout",icon:"log-out"});
-      }else{
-        this.appPages.push({title:"Giriş Yap",url:"/login",icon:"log-in"});
-      }
-    });
+    var self = this;
+    function generateMenu(){
+      self.afAuth.authState.subscribe(res => {
+        self.appPages = []; //clear menu
+
+        self.appPages.push({title: "Home",url: "/home",icon: "home"}); // joint menu items
+        self.appPages.push({
+          title: 'Kategoriler',
+          children:[
+            {
+              title:'Ionic',
+              url:'test/test',
+              icon:'logo-ionic'
+            },
+            {
+              title:'Google',
+              url:'test/test',
+              icon:'logo-google'
+            }
+          ]
+        });
+        if (res && res.uid) { // Here is working while user logged
+          self.isLogin = true;
+          self.appPages.push({title:"Profil",url:"/profile",icon:"person"});
+          self.appPages.push({title:"Çıkış",url:"/logout",icon:"log-out"});
+        }else{ // türkçe lan türkçe
+          self.appPages.push({title:"Giriş Yap",url:"/login",icon:"log-in"});
+        }
+      });
+    }
+    generateMenu();
   }
 
   initializeApp() {
