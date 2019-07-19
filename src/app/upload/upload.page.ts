@@ -76,7 +76,7 @@ export class UploadPage implements OnInit {
 
     this.afstore.doc(`posts/${this.postid1}`).update({
       owner_id: this.user.getUID(),
-      owner_mail: this.user.getUsername()
+      owner_username: this.user.getUsername()
     })
 
     const postid = this.postid1;
