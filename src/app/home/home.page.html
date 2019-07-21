@@ -7,8 +7,9 @@
   </ion-toolbar>
 </ion-header>
 <ion-content>
+  <h6 class="m-2">Genel Haberler</h6>
     <ion-card *ngFor="let post of userPosts">
-      <ion-card-content>
+      <ion-card-content (click)="goDetails(post.id)">
         <div class="row">
           <div class="col-9">
             <ion-card-title>{{ post.post_title }}</ion-card-title>
@@ -31,7 +32,7 @@
                 <div class="col-6">
                     <ion-badge color="Unread">
                       <ion-icon name="people"></ion-icon>
-                      <span class="pl-1"> 20k</span>
+                      <span class="pl-1"> {{post.view}}</span>
                     </ion-badge></div>
             </div>
           </div>
