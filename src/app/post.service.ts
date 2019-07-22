@@ -15,7 +15,8 @@ export interface Post {
     owner_username: string,
     cat_of_post: string,
     view:number,
-    comments: Comment[]
+    comments: Comment[],
+    date: String
 }
 export interface PostId extends Post{
     id:string;
@@ -25,6 +26,13 @@ export interface Comment{
     content:String,
     date: String
 }
+export interface DateTime{
+    hour: number,
+    minute: number,
+    year: number,
+    month: number,
+    day: number
+}
 @Injectable({
     providedIn: 'root'
   })
@@ -32,9 +40,11 @@ export class PostService {
     private post: Post;
     private postCollection: AngularFirestoreCollection<Post>;
     posts: Observable<PostId[]>;
-    
+    private dateObj = new Date();
+    private dateTimeNow: DateTime;
+
     constructor(private userService: UserService, private afs:AngularFirestore){
-        
+        this.dateTimeNow = this.setDateTime(this.dateTimeNow);
     }
     
     getPosts(){
@@ -42,9 +52,10 @@ export class PostService {
        
         this.posts = this.postCollection.snapshotChanges().pipe(
         map(actions => actions.map(a => {
-          const data = a.payload.doc.data() as Post;
-          const id = a.payload.doc.id;
-          return { id, ...data };
+            const data = a.payload.doc.data() as Post;
+            const time = this.convertReadableTime(data.date);
+            const id = a.payload.doc.id;
+          return { id,time, ...data };
         }))
       );
       return this.posts;
@@ -73,6 +84,9 @@ export class PostService {
         this.afs.doc(`posts/${id}`).update(post);
     }
     setPost(_desc,_post_title,_image_url,_owner_id,_owner_username,_cat_of_post){
+        var time = this.dateObj.toTimeString().split(' ')[0];
+        var date = this.dateObj.toISOString().split('T')[0];
+
         let post: Post={
             owner_id: _owner_id,
             owner_username: _owner_username,
@@ -81,16 +95,16 @@ export class PostService {
             desc: _desc,
             cat_of_post: _cat_of_post,
             view:0,
-            comments:[]
+            comments:[],
+            date:time+'/'+date
         };
 
         return this.post = post;
     }
 
     async addComment(id: String, allComments: Comment[], comment: String){
-        var dateObj = new Date();
-        var time = dateObj.toTimeString().split(' ')[0];
-        var date = dateObj.toISOString().split('T')[0];
+        var time = this.dateObj.toTimeString().split(' ')[0];
+        var date = this.dateObj.toISOString().split('T')[0];
 
         let newComment:Comment ={
             owner:this.userService.getUser(),
@@ -99,6 +113,53 @@ export class PostService {
         }
         allComments.push(newComment);
         await this.afs.doc(`posts/${id}`).update({comments: allComments});
+    }
+
+    convertReadableTime(_date: String){
+        if(_date ===undefined)
+            return _date;
+        var datetimeObj: DateTime = this.setDateTime(datetimeObj,_date);
+        var Result = (this.dateTimeNow.day-datetimeObj.day)+
+        (this.dateTimeNow.month-datetimeObj.month)*30+
+        (this.dateTimeNow.month-datetimeObj.month)*360+
+        (this.dateTimeNow.hour-datetimeObj.hour)/24+
+        (this.dateTimeNow.minute-datetimeObj.minute)/1440;
+        var strinResult;
+        if(Result>360)
+            strinResult = Math.floor(Result/360)+" yıl önce";
+            else if(Result>30)
+                strinResult = Math.floor(Result/30)+" ay önce";
+                else if(Result>1)
+                    strinResult = Math.floor(Result)+" gün önce";
+                    else if(Result>0.041)
+                        strinResult = Math.floor(Result*0.041) + " saat önce";
+                        else
+                            strinResult = " az önce";
+        return strinResult;
+    }
+
+    setDateTime(dateTime: DateTime, dateForSplit: String=null){ //update datetime for now
+        var time,date;
+        if(dateForSplit==null){
+            time = this.dateObj.toTimeString().split(' ')[0];
+            date = this.dateObj.toISOString().split('T')[0];
+        }else{
+            var splitedDate = dateForSplit.split('/'); 
+            time = splitedDate[0]; 
+            date = splitedDate[1];
+        }
+
+        time = time.split(':');
+        date = date.split('-');
+
+        dateTime = {
+            day:Number(date[2]),
+            month:Number(date[1]),
+            year:Number(date[0]),
+            hour:Number(time[0]),
+            minute:Number(time[1])
+        }
+        return dateTime;
     }
 
     getUID(){
