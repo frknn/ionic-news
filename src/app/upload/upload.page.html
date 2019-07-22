@@ -6,7 +6,6 @@
 
 <ion-content>
   <div class="center">
-
     <ion-card>
       <ion-card-header>
         <input type="file" *ngIf="!imageKey" (change)="fileChanged($event)" class="filebtn" #fileBtn>
@@ -19,13 +18,20 @@
         <ion-input type="text" placeholder="Enter title" [(ngModel)]="posttitle"></ion-input>
         <ion-textarea placeholder="Enter some description" [(ngModel)]="desc"></ion-textarea>
         <ion-select placeholder="Select Category" [(ngModel)]="selectedcat">
-            <ion-select-option *ngFor="let cat of categories" value="{{cat.category}}">{{cat.category_id}} - {{cat.category}}</ion-select-option>
-       </ion-select>
+          <ion-select-option *ngFor="let cat of categories" value="{{cat.category}}">{{cat.category_id}} -
+            {{cat.category}}</ion-select-option>
+        </ion-select>
         <!-- <ion-label>{{selectedcat}}</ion-label> -->
         <ion-button shape="round" color="primary" (click)="createPost()">Share</ion-button>
 
       </ion-card-content>
     </ion-card>
   </div>
+
+  <ion-fab vertical="bottom" horizontal="center" slot="fixed">
+    <ion-fab-button (click)="takePicture()">
+      <ion-icon name="camera"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
 
 </ion-content>

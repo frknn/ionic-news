@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import * as firebase from 'firebase';
 import { Router } from '@angular/router';
+import { UserService } from 'src/app/user.service';
 
 @Component({
   selector: 'app-logout',
@@ -10,10 +11,11 @@ import { Router } from '@angular/router';
 })
 export class LogoutPage implements OnInit {
 
-  constructor(public afAuth: AngularFireAuth,
+  constructor(
+    public afAuth: AngularFireAuth,
     public router: Router) {
     firebase.auth().signOut();
-    this.router.navigate(['/tabs'],{queryParams: { 'refresh': Date.now() }});
+    this.router.navigate(['/tabs'], { queryParams: { 'refresh': Date.now() } });
   }
 
   ngOnInit() {

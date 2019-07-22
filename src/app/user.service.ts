@@ -22,7 +22,7 @@ export class UserService {
   async isAuthenticated() {
     if (this.user) return true;
 
-    const user = await this.afAuth.authState.pipe(first()).toPromise();
+    const user = await this.afAuth.authState.pipe(first()).toPromise()
 
     if (user) {
       this.setUser({
