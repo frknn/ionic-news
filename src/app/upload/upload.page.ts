@@ -2,8 +2,11 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { Http } from '@angular/http'
 import { AngularFirestore } from '@angular/fire/firestore';
 import { UserService } from '../user.service';
-import { firestore, User } from 'firebase';
+import { firestore} from 'firebase';
 import * as firebase from 'firebase';
+import { first } from 'rxjs/operators';
+import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
+import { AngularFireAuth } from '@angular/fire/auth';
 import { AlertController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { PostService } from '../post.service';
@@ -20,8 +23,9 @@ export class UploadPage implements OnInit {
   desc: string;
   posttitle: string;
   posts1 = [];
-  categories=[];
+  categories = [];
   selectedcat;
+  takenimg;
   postid1: string;
   storageRef = firebase.storage();
   current_datetime = new Date();
@@ -34,10 +38,15 @@ export class UploadPage implements OnInit {
     public afstore: AngularFirestore,
     public alertController: AlertController,
     public user: UserService,
+    private camera: Camera,
+    public router: Router,
+    private afAuth: AngularFireAuth,
     public postService: PostService,
-    public router: Router
-  ) { 
+
+  ) {
+
   }
+
 
   ngOnInit() {    
     // TODO: herşey okay ama router bi kez çalışıyor
@@ -49,24 +58,58 @@ export class UploadPage implements OnInit {
 
     this.afstore.collection('categories').valueChanges().subscribe(category => {
       this.categories = category;
-      });
+    });
+    console.log(this.categories);
+  }
+
+
+
+  async takePicture() {
+    const options: CameraOptions = {
+      quality: 70,
+      destinationType: this.camera.DestinationType.DATA_URL,
+      encodingType: this.camera.EncodingType.JPEG,
+      mediaType: this.camera.MediaType.PICTURE
     }
+
+    await this.camera.getPicture(options).then((imageData) => {
+      this.imageKey ='';
+      this.takenimg = imageData;      
+    }, (err) => {
+      console.log("Camera issue:" + err);
+    });
+
+    this.storageRef.ref(`pictures/upload/${'mypics' + '#' + this.current_datetime.getTime()}`)
+      .putString('data:image/jpeg;base64,'+this.takenimg,  firebase.storage.StringFormat.DATA_URL)
+      .then(snapshot => {
+        return snapshot.ref.getDownloadURL();
+      })
+      .then(downloadURL => {
+        alert(downloadURL);
+        return this.imageKey = downloadURL;
+      })
+      .catch(err => {
+        alert(err);
+      })
+  }
 
   async fileChanged(event) {
     const file = event.target.files[0];
 
     this.storageRef
-    .ref(`pictures/upload/${file.name+ '#' + this.current_datetime.getTime()}`)
-    .put(file)
-    .then(snapshot => {
-      return snapshot.ref.getDownloadURL();
-    })
-    .then(downloadURL => {
-      this.imageKey = downloadURL;
-    })
+      .ref(`pictures/upload/${file.name + '#' + this.current_datetime.getTime()}`)
+      .put(file)
+      .then(snapshot => {
+        return snapshot.ref.getDownloadURL();
+      })
+      .then(downloadURL => {
+        console.log(downloadURL);//kaldırılacak
+        this.imageKey = downloadURL;
+      })
   }
 
   async createPost() {
+
     const image = this.imageKey;
     const desc = this.desc;
     const post_title = this.posttitle;
@@ -114,16 +157,16 @@ export class UploadPage implements OnInit {
     // }, err => {
     //   console.log("Error getting doc: ", err)
     // })
-/* 
+
     this.imageKey = '';
     this.desc='';
     this.posttitle='';
-    this.selectedcat=''; */
+    this.selectedcat=''; 
 
     this.router.navigate(['/newsdetail/'+this.postid1]);
   }
 
-  uploadFile(){
+  uploadFile() {
     this.fileButton.nativeElement.click()
   }
   async ShowAlert(header: string, message: string) {

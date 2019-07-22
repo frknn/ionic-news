@@ -16,6 +16,8 @@ import { AngularFirestore, AngularFirestoreModule } from '@angular/fire/firestor
 import { HttpModule } from '@angular/http';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { AuthService } from './auth.service';
+import { Camera } from '@ionic-native/camera/ngx';
+
 
 @NgModule({
   declarations: [AppComponent],
@@ -35,7 +37,8 @@ import { AuthService } from './auth.service';
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     UserService,
     AngularFirestore,
-    AuthService
+    AuthService,
+    Camera
   ],
   bootstrap: [AppComponent]
 })
