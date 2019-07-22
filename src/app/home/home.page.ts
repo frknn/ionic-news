@@ -2,7 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { UserService } from '../user.service';
 import { Router, ActivatedRoute } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { Subscription, Observable } from 'rxjs';
+import { PostService } from '../post.service';
 
 @Component({
   selector: 'app-home',
@@ -15,16 +16,20 @@ export class HomePage implements OnInit {
   
   $_route$: Subscription;
 
-  constructor(private afs: AngularFirestore, private user: UserService,private router:ActivatedRoute) {
-    this.afs.collection('posts').valueChanges().subscribe(postlar => {
+  constructor(private afs: AngularFirestore, private user: UserService,private router:Router, private posts: PostService) {
+   /*  this.afs.collection('posts').valueChanges().subscribe(postlar => {
       this.userPosts = postlar;
-    });
+    }); */
+  
+    
   }
-
+  goDetails(id){
+      this.router.navigate(['/newsdetail/'+id]);
+  }
   ngOnInit() {
-    /* try{
-    console.log(this.router.routerState);
-    }catch(e){} */
+    const datas = this.posts.getPosts().subscribe(posts=>{
+      this.userPosts = posts;
+    });
   }
 
 }

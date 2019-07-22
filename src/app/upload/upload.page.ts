@@ -6,9 +6,10 @@ import { firestore} from 'firebase';
 import * as firebase from 'firebase';
 import { first } from 'rxjs/operators';
 import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
-import { Router } from '@angular/router';
 import { AngularFireAuth } from '@angular/fire/auth';
-
+import { AlertController } from '@ionic/angular';
+import { Router } from '@angular/router';
+import { PostService } from '../post.service';
 
 
 @Component({
@@ -35,16 +36,26 @@ export class UploadPage implements OnInit {
   constructor(
     public http: Http,
     public afstore: AngularFirestore,
+    public alertController: AlertController,
     public user: UserService,
     private camera: Camera,
     public router: Router,
-    private afAuth: AngularFireAuth
+    private afAuth: AngularFireAuth,
+    public postService: PostService,
+
   ) {
 
   }
 
 
-  ngOnInit() {
+  ngOnInit() {    
+    // TODO: herşey okay ama router bi kez çalışıyor
+    if(!this.user.isAuthenticated()){
+     this.ShowAlert("Hata","Haber oluşturabilmek için giriş yapmanız gerekiyor");
+     this.router.navigate(['/tabs']);
+   }
+
+
     this.afstore.collection('categories').valueChanges().subscribe(category => {
       this.categories = category;
     });
@@ -84,7 +95,6 @@ export class UploadPage implements OnInit {
 
   async fileChanged(event) {
     const file = event.target.files[0];
-    console.log(file.name); // kalkacak
 
     this.storageRef
       .ref(`pictures/upload/${file.name + '#' + this.current_datetime.getTime()}`)
@@ -104,19 +114,25 @@ export class UploadPage implements OnInit {
     const desc = this.desc;
     const post_title = this.posttitle;
     const cat_of_post = this.selectedcat;
-
+    const view = 0;
+    let post = this.postService.setPost(desc,
+      post_title,
+      image,
+      this.user.getUID(),
+      this.user.getUsername(),
+      cat_of_post);
     // const ownerid = this.user.getUID();
 
-    await this.afstore.collection('posts').add({ image, desc, post_title, cat_of_post })
-      .then(res => {
-        this.postid1 = res.id; //kullanıcının postlarını belirlemek için
-        console.log("Response id(Post id): ", res.id)//kalkacak
-      });
+    await this.afstore.collection('posts').add(post)
+    .then(res => {
+      this.postid1 = res.id; //kullanıcının postlarını belirlemek için
+      this.router.navigate(['/newsdetail/'+this.postid1]);
+    });
 
-    this.afstore.doc(`posts/${this.postid1}`).update({
+   /*  this.afstore.doc(`posts/${this.postid1}`).update({
       owner_id: this.user.getUID(),
-      owner_mail: this.user.getUsername()
-    })
+      owner_username: this.user.getUsername()
+    }) */
 
     const postid = this.postid1;
 
@@ -125,9 +141,9 @@ export class UploadPage implements OnInit {
         postid
       })
     })
-
+/* 
     var docRef = this.afstore.collection('posts');
-
+ */
     // eski post pushlama kodu
     // await docRef.get().subscribe(posts2 => {
     //   if (!posts2.empty) {
@@ -143,12 +159,23 @@ export class UploadPage implements OnInit {
     // })
 
     this.imageKey = '';
-    this.desc = '';
-    this.posttitle = '';
-    this.selectedcat = '';
+    this.desc='';
+    this.posttitle='';
+    this.selectedcat=''; 
+
+    this.router.navigate(['/newsdetail/'+this.postid1]);
   }
 
   uploadFile() {
     this.fileButton.nativeElement.click()
+  }
+  async ShowAlert(header: string, message: string) {
+      const alert = await this.alertController.create({
+        header,
+        message,
+        buttons: ["OK!"]
+      })
+  
+      await alert.present();
   }
 }

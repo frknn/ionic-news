@@ -19,7 +19,9 @@ const routes: Routes = [
   { path: 'logout', loadChildren: './pages/logout/logout.module#LogoutPageModule' },
   { path: 'login', loadChildren: './login/login.module#LoginPageModule' },
   { path: 'register', loadChildren: './register/register.module#RegisterPageModule' },
-  { path: 'tabs', loadChildren: './tabs/tabs.module#TabsPageModule' }
+  { path: 'tabs', loadChildren: './tabs/tabs.module#TabsPageModule' },
+  { path: 'newsdetail/:id', loadChildren: './pages/newsdetail/newsdetail.module#NewsdetailPageModule' }
+
 ];
 
 @NgModule({
