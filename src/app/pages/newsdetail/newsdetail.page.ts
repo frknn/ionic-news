@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { PostService, Post } from 'src/app/post.service';
+import { AngularFirestoreDocument } from '@angular/fire/firestore';
 
 @Component({
   selector: 'app-newsdetail',
@@ -12,19 +13,25 @@ export class NewsdetailPage implements OnInit {
     id:0
   };
 
+  commentContent: String;
+  postId: String;
+  fetchPost: AngularFirestoreDocument;
 
   constructor(private activatedRoute: ActivatedRoute, private postService:PostService) { }
-  private postId;
   ngOnInit() {
     this.postId = this.activatedRoute.snapshot.paramMap.get('id');
-    let fetchPost = this.postService.getPostsById(this.postId);
+    this.fetchPost = this.postService.getPostsById(this.postId);
 
-    this.postService.incPostView(fetchPost);
+    this.postService.incPostView(this.fetchPost);
 
-    fetchPost.valueChanges().subscribe(post=>{
+    this.fetchPost.valueChanges().subscribe(post=>{
       this.post = post;
     });
     
+  }
+  postComment(){
+    this.postService.addComment(this.postId,this.post.comments,this.commentContent);
+    this.commentContent="";
   }
 
 }

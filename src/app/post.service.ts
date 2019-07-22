@@ -4,6 +4,8 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import * as Long from 'long';
 import { DomEventsPlugin } from '@angular/platform-browser/src/dom/events/dom_events';
+import { User } from 'firebase';
+import { UserService } from './user.service';
 
 export interface Post {
     desc: string,
@@ -12,12 +14,17 @@ export interface Post {
     owner_id: string,
     owner_username: string,
     cat_of_post: string,
-    view:number
+    view:number,
+    comments: Comment[]
 }
 export interface PostId extends Post{
     id:string;
 }
-  
+export interface Comment{
+    owner: any,
+    content:String,
+    date: String
+}
 @Injectable({
     providedIn: 'root'
   })
@@ -26,7 +33,7 @@ export class PostService {
     private postCollection: AngularFirestoreCollection<Post>;
     posts: Observable<PostId[]>;
     
-    constructor(private afs:AngularFirestore){
+    constructor(private userService: UserService, private afs:AngularFirestore){
         
     }
     
@@ -73,10 +80,25 @@ export class PostService {
             post_title: _post_title,
             desc: _desc,
             cat_of_post: _cat_of_post,
-            view:0
+            view:0,
+            comments:[]
         };
 
         return this.post = post;
+    }
+
+    async addComment(id: String, allComments: Comment[], comment: String){
+        var dateObj = new Date();
+        var time = dateObj.toTimeString().split(' ')[0];
+        var date = dateObj.toISOString().split('T')[0];
+
+        let newComment:Comment ={
+            owner:this.userService.getUser(),
+            content: comment,
+            date:time+'/'+date
+        }
+        allComments.push(newComment);
+        await this.afs.doc(`posts/${id}`).update({comments: allComments});
     }
 
     getUID(){

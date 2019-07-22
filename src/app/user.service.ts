@@ -12,7 +12,7 @@ export class UserService {
   private user: User;
 
   constructor(private afAuth: AngularFireAuth) {
-
+    this.isAuthenticated();
   }
 
   setUser(user: User) {
@@ -26,7 +26,7 @@ export class UserService {
 
     if (user) {
       this.setUser({
-        username: user.email,
+        username: user.email.split("@")[0],
         uid: user.uid
       })
 
@@ -35,7 +35,9 @@ export class UserService {
 
     return false;
   }
-
+  getUser(){
+    return this.user;
+  }
   getUID() {
     return this.user.uid;
   }
