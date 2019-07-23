@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { Http } from '@angular/http'
 import { AngularFirestore } from '@angular/fire/firestore';
 import { UserService } from '../user.service';
-import { firestore} from 'firebase';
+import { firestore } from 'firebase';
 import * as firebase from 'firebase';
 import { first } from 'rxjs/operators';
 import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
@@ -18,6 +18,13 @@ import { PostService } from '../post.service';
   styleUrls: ['./upload.page.scss'],
 })
 export class UploadPage implements OnInit {
+
+  ionViewWillEnter(){
+    if (!firebase.auth().currentUser) {
+      this.ShowAlert("Hata", "Haber oluşturabilmek için giriş yapmanız gerekiyor");
+      this.router.navigate(['/home/home']);
+    }
+  }
 
   imageKey: string;
   desc: string;
@@ -48,20 +55,20 @@ export class UploadPage implements OnInit {
   }
 
 
-  ngOnInit() {    
+  ngOnInit() {
     // TODO: herşey okay ama router bi kez çalışıyor
-    if(!this.user.isAuthenticated()){
-     this.ShowAlert("Hata","Haber oluşturabilmek için giriş yapmanız gerekiyor");
-     this.router.navigate(['/tabs']);
-   }
-
-
+    // if(!this.user.isAuthenticated()){
+    //  this.ShowAlert("Hata","Haber oluşturabilmek için giriş yapmanız gerekiyor");
+    //  this.router.navigate(['/tabs']);
+    // if (!firebase.auth().currentUser) {
+    //   this.ShowAlert("Hata", "Haber oluşturabilmek için giriş yapmanız gerekiyor");
+    //   this.router.navigate(['/login']);
+    // }
     this.afstore.collection('categories').valueChanges().subscribe(category => {
       this.categories = category;
     });
     console.log(this.categories);
   }
-
 
 
   async takePicture() {
@@ -73,14 +80,14 @@ export class UploadPage implements OnInit {
     }
 
     await this.camera.getPicture(options).then((imageData) => {
-      this.imageKey ='';
-      this.takenimg = imageData;      
+      this.imageKey = '';
+      this.takenimg = imageData;
     }, (err) => {
       console.log("Camera issue:" + err);
     });
 
     this.storageRef.ref(`pictures/upload/${'mypics' + '#' + this.current_datetime.getTime()}`)
-      .putString('data:image/jpeg;base64,'+this.takenimg,  firebase.storage.StringFormat.DATA_URL)
+      .putString('data:image/jpeg;base64,' + this.takenimg, firebase.storage.StringFormat.DATA_URL)
       .then(snapshot => {
         return snapshot.ref.getDownloadURL();
       })
@@ -124,15 +131,15 @@ export class UploadPage implements OnInit {
     // const ownerid = this.user.getUID();
 
     await this.afstore.collection('posts').add(post)
-    .then(res => {
-      this.postid1 = res.id; //kullanıcının postlarını belirlemek için
-      this.router.navigate(['/newsdetail/'+this.postid1]);
-    });
+      .then(res => {
+        this.postid1 = res.id; //kullanıcının postlarını belirlemek için
+        this.router.navigate(['/newsdetail/' + this.postid1]);
+      });
 
-   /*  this.afstore.doc(`posts/${this.postid1}`).update({
-      owner_id: this.user.getUID(),
-      owner_username: this.user.getUsername()
-    }) */
+    /*  this.afstore.doc(`posts/${this.postid1}`).update({
+       owner_id: this.user.getUID(),
+       owner_username: this.user.getUsername()
+     }) */
 
     const postid = this.postid1;
 
@@ -141,9 +148,9 @@ export class UploadPage implements OnInit {
         postid
       })
     })
-/* 
-    var docRef = this.afstore.collection('posts');
- */
+    /* 
+        var docRef = this.afstore.collection('posts');
+     */
     // eski post pushlama kodu
     // await docRef.get().subscribe(posts2 => {
     //   if (!posts2.empty) {
@@ -159,23 +166,23 @@ export class UploadPage implements OnInit {
     // })
 
     this.imageKey = '';
-    this.desc='';
-    this.posttitle='';
-    this.selectedcat=''; 
+    this.desc = '';
+    this.posttitle = '';
+    this.selectedcat = '';
 
-    this.router.navigate(['/newsdetail/'+this.postid1]);
+    this.router.navigate(['/newsdetail/' + this.postid1]);
   }
 
   uploadFile() {
     this.fileButton.nativeElement.click()
   }
   async ShowAlert(header: string, message: string) {
-      const alert = await this.alertController.create({
-        header,
-        message,
-        buttons: ["OK!"]
-      })
-  
-      await alert.present();
+    const alert = await this.alertController.create({
+      header,
+      message,
+      buttons: ["OK!"]
+    })
+
+    await alert.present();
   }
 }

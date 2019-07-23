@@ -13,8 +13,15 @@ export class LogoutPage implements OnInit {
 
   constructor(
     public afAuth: AngularFireAuth,
-    public router: Router) {
-    firebase.auth().signOut();
+    public router: Router,
+    private user: UserService) {
+    this.user.setUser({ username: '', uid: '' })
+    firebase.auth().signOut().then(() => {
+      this.router.navigate(['/login'], { queryParams: { 'refresh': Date.now() } });
+    })
+      .catch(err => {
+        console.log(err);
+      });
     this.router.navigate(['/tabs'], { queryParams: { 'refresh': Date.now() } });
   }
 
