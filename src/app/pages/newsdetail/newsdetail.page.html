@@ -12,7 +12,7 @@
     <ion-card>
         <ion-img [src]="post.image" [alt]=""></ion-img>
         <ion-card-header>
-          <ion-card-title>{{ post.post_title }}</ion-card-title>
+          <ion-card-title>{{ post.post_title }} <div class="ion-float-right pt-1 text-secondary time">{{time}}</div></ion-card-title>
           <ion-card-subtitle>{{post.cat_of_post}}</ion-card-subtitle>
           <ion-card-subtitle>Yazar <b>{{post.owner_username}}</b></ion-card-subtitle>
         </ion-card-header>

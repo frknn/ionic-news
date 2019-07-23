@@ -15,7 +15,7 @@ export class NewsdetailPage implements OnInit {
   public post: any = {
     id: 0
   };
-
+  public time: String;
   commentContent: String;
   postId: String;
   fetchPost: AngularFirestoreDocument;
@@ -26,9 +26,10 @@ export class NewsdetailPage implements OnInit {
     this.fetchPost = this.postService.getPostsById(this.postId);
 
     this.postService.incPostView(this.fetchPost);
-
+    
     this.fetchPost.valueChanges().subscribe(post => {
       this.post = post;
+      this.time = this.postService.convertReadableTime(post.date);
     });
 
   }

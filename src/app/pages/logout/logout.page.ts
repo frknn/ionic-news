@@ -17,7 +17,7 @@ export class LogoutPage implements OnInit {
     private user: UserService) {
     this.user.setUser({ username: '', uid: '' })
     firebase.auth().signOut().then(() => {
-      this.router.navigate(['/login'], { queryParams: { 'refresh': Date.now() } });
+      this.router.navigate(['/tabs'], { queryParams: { 'refresh': Date.now() } });
     })
       .catch(err => {
         console.log(err);
