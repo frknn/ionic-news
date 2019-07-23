@@ -11,28 +11,44 @@
   <ion-card>
     <ion-card-content>
       <div class="row">
+        <div class="col-12" *ngIf="!userName">
+          <div class="row">
+            <div class="col-3">
+              <span class="text-warning alert text-center">
+                <ion-icon name="alert"></ion-icon>
+              </span>
+            </div>
+            <div class="col-9">
+              <p class="text-warning bg-light p-1">Ad ve Soyad henüz eklenmemiş</p>
+            </div>
+          </div>
+        </div>
         <div class="col-4">
           <img style="margin:10px 10px" src="https://img.icons8.com/ios/50/000000/user-male-circle.png" alt="">
         </div>
         <div class="col-8">
           <div class="row" style="margin: auto">
-            <ion-card-content style="margin: auto">{{frontName}} {{frontLastname}}</ion-card-content>
+            <ion-card-content style="margin: auto">{{userName}} {{userLastname}}</ion-card-content>
           </div>
-          <div class="row" style="margin: auto">
-            <ion-card-content no-padding style="margin-left: 20px;"><img
-                src={{userRank}}>
-            </ion-card-content>
-            <ion-card-content style="padding-left: 0">{{userRankTitle}}</ion-card-content>
+          <div class="row">
+            <div class="col-12 text-center"><img class="m-0 m-auto rankimg d-inline" src={{userRank}}><span> {{userRankTitle}}</span></div>
           </div>
         </div>
       </div>
     </ion-card-content>
   </ion-card>
   <ion-card style="text-align: center">
+    <ion-card-header>Bilgileri değiştir</ion-card-header>
     <ion-card-content>
-      <ion-input type="text" placeholder="Enter your first name" [(ngModel)]="userName"></ion-input>
-      <ion-input type="text" placeholder="Enter your last name" [(ngModel)]="userLastname"></ion-input>
-      <ion-button expand="block" color="primary" (click)="updateName()">Update Your Name
+      <ion-item>
+          <ion-label position="floating">Ad</ion-label>
+          <ion-input type="text" placeholder="Enter your first name" [(ngModel)]="userName"></ion-input>
+      </ion-item>
+      <ion-item>
+          <ion-label position="floating">Soyad</ion-label>
+          <ion-input type="text" placeholder="Enter your first name" [(ngModel)]="userLastname"></ion-input>
+      </ion-item>
+      <ion-button expand="block" color="success" (click)="updateName()">Kaydet
       </ion-button>
     </ion-card-content>
   </ion-card>

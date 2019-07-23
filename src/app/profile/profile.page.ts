@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { UserService } from '../user.service';
 import { AngularFirestore } from '@angular/fire/firestore';
+import { AlertController } from '@ionic/angular';
 
 @Component({
   selector: 'app-profile',
@@ -18,7 +19,8 @@ export class ProfilePage implements OnInit {
 
   constructor(
     private user: UserService,
-    private afs: AngularFirestore
+    private afs: AngularFirestore,
+    private alertController: AlertController
   ) {
   }
 
@@ -26,8 +28,8 @@ export class ProfilePage implements OnInit {
     this.afs.doc<Object>(`users/${this.user.getUID()}`).valueChanges()
       .subscribe(mydata => {
         console.log(mydata);
-        this.frontName = mydata["name"]
-        this.frontLastname = mydata["lastname"]
+        this.userName = mydata["name"]
+        this.userLastname = mydata["lastname"]
         if(mydata["posts"]){
           console.log(mydata["posts"].length);
           if(mydata["posts"].length>=5){
@@ -50,20 +52,32 @@ export class ProfilePage implements OnInit {
   }
 
   async updateName() {
+    var self = this;
     await this.afs.doc(`users/${this.user.getUID()}`).update(
       {
         name: this.userName,
         lastname: this.userLastname
       }
-    );
+    ).then(function(){
+      self.ShowAlert("Başarılı","İşleminiz kaydedildi");
+    });
 
 
-    this.afs.doc<Object>(`users/${this.user.getUID()}`).valueChanges()
+    /* this.afs.doc<Object>(`users/${this.user.getUID()}`).valueChanges()
       .subscribe(mydata => {
-        console.log(mydata);
-        this.frontName = mydata["name"]
-        this.frontLastname = mydata["lastname"]
-      })
+        this.userName = mydata["name"]
+        this.userLastname = mydata["lastname"]
+      }); */
+  
+  }
+  
+  async ShowAlert(header: string, message: string) {
+    const alert = await this.alertController.create({
+      header,
+      message,
+      buttons: ["OK!"]
+    })
+    await alert.present();
   }
 
 }
