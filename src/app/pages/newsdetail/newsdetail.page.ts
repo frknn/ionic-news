@@ -10,28 +10,28 @@ import { AngularFirestoreDocument } from '@angular/fire/firestore';
 })
 export class NewsdetailPage implements OnInit {
   public post: any = {
-    id:0
+    id: 0
   };
 
   commentContent: String;
   postId: String;
   fetchPost: AngularFirestoreDocument;
 
-  constructor(private activatedRoute: ActivatedRoute, private postService:PostService) { }
+  constructor(private activatedRoute: ActivatedRoute, private postService: PostService) { }
   ngOnInit() {
     this.postId = this.activatedRoute.snapshot.paramMap.get('id');
     this.fetchPost = this.postService.getPostsById(this.postId);
 
     this.postService.incPostView(this.fetchPost);
 
-    this.fetchPost.valueChanges().subscribe(post=>{
+    this.fetchPost.valueChanges().subscribe(post => {
       this.post = post;
     });
-    
+
   }
-  postComment(){
-    this.postService.addComment(this.postId,this.post.comments,this.commentContent);
-    this.commentContent="";
+  postComment() {
+    this.postService.addComment(this.postId, this.post.comments, this.commentContent);
+    this.commentContent = "";
   }
 
 }

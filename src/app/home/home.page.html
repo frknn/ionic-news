@@ -1,43 +1,44 @@
 <ion-header>
   <ion-toolbar>
-      <ion-buttons slot="start">
-        <ion-menu-button></ion-menu-button>
-      </ion-buttons>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
     <ion-title>Haberler</ion-title>
   </ion-toolbar>
 </ion-header>
 <ion-content>
   <h6 class="m-2">Genel Haberler</h6>
-    <ion-card *ngFor="let post of userPosts">
-      <ion-card-content (click)="goDetails(post.id)">
-        <div class="row">
-          <div class="col-9">
-            <ion-card-title>{{ post.post_title }}</ion-card-title>
-            <ion-card-content no-padding>{{post.desc}}</ion-card-content>
-          </div>
-          <div class="col-3 p-0">
-              <ion-img [src]="post.image" [alt]=""></ion-img>
-          </div>
+  <ion-card *ngFor="let post of userPosts">
+    <ion-card-content (click)="goDetails(post.id)">
+      <div class="row">
+        <div class="col-9">
+          <ion-card-title>{{ post.post_title }}</ion-card-title>
+          <ion-card-content no-padding>{{post.desc}}</ion-card-content>
         </div>
-        <div class="row mt-2 bg-light pt-1">
-          <div class="col-5 writer">{{post.owner_username}}</div>
-          <div class="col-7">
-            <div class="row text-info text-right">
-                <div class="col-6">
-                    <ion-badge color="Unread">
-                      <ion-icon name="people"></ion-icon>
-                      <span class="pl-1"> {{post.view}}</span>
-                    </ion-badge></div>
-                <div class="col-6 mr-0 pr-0">
-                  <ion-badge color="Unread">
-                    <span class="pl-1"> {{post.time}}</span>
-                  </ion-badge>
-                  </div>
+        <div class="col-3 p-0">
+          <ion-img [src]="post.image" [alt]=""></ion-img>
+        </div>
+      </div>
+      <div class="row mt-2 bg-light pt-1">
+        <div class="col-4 writer">{{post.owner_username}}</div>
+        <div class="col-8">
+          <div class="row text-info text-right">
+            <div class="col-7 mr-0 pr-0">
+              <ion-badge color="Unread">
+                <span class="pl-1"> {{post.time}}</span>
+              </ion-badge>
+            </div>
+            <div class="col-5">
+              <ion-badge color="Unread">
+                <ion-icon name="people"></ion-icon>
+                <span class="pl-1"> {{post.view}}</span>
+              </ion-badge>
             </div>
           </div>
         </div>
-      </ion-card-content>
-    </ion-card>
+      </div>
+    </ion-card-content>
+  </ion-card>
   <!-- <div class="cont" *ngFor="let post of userPosts">
     <ion-card>
       <ion-img [src]="post.image" [alt]=""></ion-img>
