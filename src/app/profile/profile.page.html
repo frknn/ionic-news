@@ -1,12 +1,39 @@
 <ion-header>
   <ion-toolbar>
-      <ion-buttons slot="start">
-        <ion-back-button defaultHref="home"></ion-back-button>
-      </ion-buttons>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="home"></ion-back-button>
+    </ion-buttons>
     <ion-title>Profil</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-
+  <ion-card>
+    <ion-card-content>
+      <div class="row">
+        <div class="col-4">
+          <img style="margin:10px 10px" src="https://img.icons8.com/ios/50/000000/user-male-circle.png" alt="">
+        </div>
+        <div class="col-8">
+          <div class="row" style="margin: auto">
+            <ion-card-content style="margin: auto">{{frontName}} {{frontLastname}}</ion-card-content>
+          </div>
+          <div class="row" style="margin: auto">
+            <ion-card-content no-padding style="margin-left: 20px;"><img
+                src={{userRank}}>
+            </ion-card-content>
+            <ion-card-content style="padding-left: 0">{{userRankTitle}}</ion-card-content>
+          </div>
+        </div>
+      </div>
+    </ion-card-content>
+  </ion-card>
+  <ion-card style="text-align: center">
+    <ion-card-content>
+      <ion-input type="text" placeholder="Enter your first name" [(ngModel)]="userName"></ion-input>
+      <ion-input type="text" placeholder="Enter your last name" [(ngModel)]="userLastname"></ion-input>
+      <ion-button expand="block" color="primary" (click)="updateName()">Update Your Name
+      </ion-button>
+    </ion-card-content>
+  </ion-card>
 </ion-content>
