@@ -29,7 +29,7 @@ export class NewsdetailPage implements OnInit {
     
     this.fetchPost.valueChanges().subscribe(post => {
       this.post = post;
-      this.time = this.postService.convertReadableTime(post.date);
+      this.time = this.postService.convertReadableTime(post.date)["string"];
     });
 
   }

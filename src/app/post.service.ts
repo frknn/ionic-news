@@ -37,6 +37,8 @@ export interface DateTime {
     providedIn: 'root'
 })
 export class PostService {
+    private HOME_DESC_LENGT = 50;
+
     private post: Post;
     private postCollection: AngularFirestoreCollection<Post>;
     posts: Observable<PostId[]>;
@@ -53,10 +55,15 @@ export class PostService {
         this.posts = this.postCollection.snapshotChanges().pipe(
             map(actions => actions.map(a => {
                 const data = a.payload.doc.data() as Post;
-                const time = this.convertReadableTime(data.date);
+                if(data.desc.length>this.HOME_DESC_LENGT){
+                    data.desc = data.desc.substr(0,this.HOME_DESC_LENGT)+'...';
+                }
+                const getTimeData = this.convertReadableTime(data.date);
+                const time = getTimeData["string"];
+                const timeInt = getTimeData["int"];
                 const id = a.payload.doc.id;
-                return { id, time, ...data };
-            }))
+                return { id, time, timeInt, ...data };
+            }).sort((a, b) => a.timeInt < b.timeInt ? -1 : a.timeInt > b.timeInt ? 1 : 0))
         );
         return this.posts;
     }
@@ -119,23 +126,25 @@ export class PostService {
         if (_date === undefined)
             return _date;
         var datetimeObj: DateTime = this.setDateTime(datetimeObj, _date);
-        var Result = (this.dateTimeNow.day - datetimeObj.day) +
-            (this.dateTimeNow.month - datetimeObj.month) * 30 +
-            (this.dateTimeNow.month - datetimeObj.month) * 360 +
-            (this.dateTimeNow.hour - datetimeObj.hour) / 24 +
-            (this.dateTimeNow.minute - datetimeObj.minute) / 1440;
-        var strinResult;
+        var Result = Math.abs(this.dateTimeNow.day - datetimeObj.day) +
+            Math.abs(this.dateTimeNow.month - datetimeObj.month) * 30 +
+            Math.abs(this.dateTimeNow.month - datetimeObj.month) * 360 +
+            Math.abs(this.dateTimeNow.hour - datetimeObj.hour) / 24 +
+            Math.abs(this.dateTimeNow.minute - datetimeObj.minute) / 1440;
+        var stringResult;
         if (Result > 360)
-            strinResult = Math.ceil(Result / 360) + " yıl önce";
+            stringResult = Math.ceil(Result / 360) + " yıl önce";
         else if (Result > 30)
-            strinResult = Math.ceil(Result / 30) + " ay önce";
+            stringResult = Math.ceil(Result / 30) + " ay önce";
         else if (Result > 1)
-            strinResult = Math.ceil(Result) + " gün önce";
+            stringResult = Math.ceil(Result) + " gün önce";
         else if (Result > 0.041)
-            strinResult = Math.ceil(Result * 0.041) + " saat önce";
+            stringResult = Math.ceil(Result * 0.041) + " saat önce";
+        else if (Result >= 0.0007)
+            stringResult = Math.ceil(Result * 0.0007) + " dakika önce";
         else
-            strinResult = " az önce";
-        return strinResult;
+            stringResult = " az önce";
+        return { "string": stringResult.toString(), "int": Result };
     }
 
     setDateTime(dateTime: DateTime, dateForSplit: String = null) { //update datetime for now

@@ -1,7 +1,7 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>Muhab</ion-title>
-  </ion-toolbar>
+<ion-header class="ion-margin-top">
+  <ion-buttons slot="start">
+    <ion-back-button defaultHref="home"></ion-back-button>
+  </ion-buttons>
 </ion-header>
 <ion-content padding  class="masters">
   <ion-grid>
@@ -27,7 +27,7 @@
     </ion-row>
         <ion-row>
           <ion-col>
-              <ion-button fill="solid" expand="block" class="bg-info" (click)="login()">Giriş Yap</ion-button>
+              <ion-button fill="solid" expand="block" [ngStyle]="{'background-color':'#eb1a24 !important'}" (click)="login()">Giriş Yap</ion-button>
             </ion-col>
         </ion-row>
         <ion-row class="text-center pt-3">
