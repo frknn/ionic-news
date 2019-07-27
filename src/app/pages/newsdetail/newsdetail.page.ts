@@ -18,6 +18,7 @@ export class NewsdetailPage implements OnInit {
   public time: String;
   commentContent: String;
   postId: String;
+  categoryName: String;
   fetchPost: AngularFirestoreDocument;
 
   constructor(private activatedRoute: ActivatedRoute, private postService: PostService) { }
@@ -29,6 +30,7 @@ export class NewsdetailPage implements OnInit {
     
     this.fetchPost.valueChanges().subscribe(post => {
       this.post = post;
+      this.categoryName = post.cat_of_post.category_title;
       this.time = this.postService.convertReadableTime(post.date)["string"];
     });
 

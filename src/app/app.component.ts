@@ -5,6 +5,10 @@ import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 import * as firebase from 'firebase';
 import { AngularFireAuth } from '@angular/fire/auth';
+import { AngularFirestore } from '@angular/fire/firestore';
+import { Category } from './post.service';
+import { map } from 'rxjs/operators';
+import { AppPage } from 'e2e/src/app.po';
 
 @Component({
   selector: 'app-root',
@@ -34,7 +38,8 @@ export class AppComponent {
     private platform: Platform,
     private splashScreen: SplashScreen,
     private statusBar: StatusBar,
-    public afAuth: AngularFireAuth
+    public afAuth: AngularFireAuth,
+    private afs: AngularFirestore
   ) {
     this.initializeApp();
     var self = this;
@@ -43,21 +48,32 @@ export class AppComponent {
         self.appPages = []; //clear menu
 
         self.appPages.push({title: "Home",url: "/home",icon: "home"}); // joint menu items
+        
+        var categories = [];
+        /* {
+          title:'Ionic',
+          url:'/newsdetail/'+id,
+          icon:'logo-ionic'
+        },
+        {
+          title:'Google',
+          url:'test/test',
+          icon:'logo-google'
+        } */
+        afs.collection<Category>("categories").valueChanges().subscribe(val=>{
+          val.forEach(element => {
+            categories.push({
+              title: element.category_title,
+              url: '/categorynews/'+element.category_id
+            });
+          });
+        });
+       
         self.appPages.push({
           title: 'Kategoriler',
-          children:[
-            {
-              title:'Ionic',
-              url:'test/test',
-              icon:'logo-ionic'
-            },
-            {
-              title:'Google',
-              url:'test/test',
-              icon:'logo-google'
-            }
-          ]
+          children:categories
         });
+        
         if (res && res.uid) { // Here is working while user logged
           self.isLogin = true;
           self.appPages.push({title:"Profil",url:"/profile",icon:"person"});

@@ -17,11 +17,13 @@ import { HttpModule } from '@angular/http';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { AuthService } from './auth.service';
 import { Camera } from '@ionic-native/camera/ngx';
+import { RateusmodalPage } from './pages/rateusmodal/rateusmodal.page';
+import { FormsModule } from '@angular/forms';
 
 
 @NgModule({
-  declarations: [AppComponent],
-  entryComponents: [],
+  declarations: [AppComponent,RateusmodalPage],
+  entryComponents: [RateusmodalPage],
   imports: [BrowserModule, 
     IonicModule.forRoot(), 
     AppRoutingModule,
@@ -29,7 +31,8 @@ import { Camera } from '@ionic-native/camera/ngx';
     AngularFireAuthModule,
     HttpModule,
     AngularFirestoreModule,
-    NgbModule.forRoot()
+    NgbModule.forRoot(),
+    FormsModule
   ],
   providers: [
     StatusBar,
