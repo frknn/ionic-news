@@ -7,7 +7,7 @@ import * as firebase from 'firebase';
 import { first } from 'rxjs/operators';
 import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
 import { AngularFireAuth } from '@angular/fire/auth';
-import { AlertController } from '@ionic/angular';
+import { AlertController, LoadingController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { PostService } from '../post.service';
 
@@ -49,7 +49,7 @@ export class UploadPage implements OnInit {
     public router: Router,
     private afAuth: AngularFireAuth,
     public postService: PostService,
-
+    private loadingController: LoadingController
   ) {
 
   }
@@ -67,7 +67,6 @@ export class UploadPage implements OnInit {
     this.afstore.collection('categories').valueChanges().subscribe(category => {
       this.categories = category;
     });
-    console.log(this.categories);
   }
 
 
@@ -86,6 +85,7 @@ export class UploadPage implements OnInit {
       console.log("Camera issue:" + err);
     });
 
+    this.loadingController.dismiss();
     this.storageRef.ref(`pictures/upload/${'mypics' + '#' + this.current_datetime.getTime()}`)
       .putString('data:image/jpeg;base64,' + this.takenimg, firebase.storage.StringFormat.DATA_URL)
       .then(snapshot => {
@@ -93,6 +93,7 @@ export class UploadPage implements OnInit {
       })
       .then(downloadURL => {
         alert(downloadURL);
+        this.loadingController.dismiss();
         return this.imageKey = downloadURL;
       })
       .catch(err => {
@@ -103,6 +104,7 @@ export class UploadPage implements OnInit {
   async fileChanged(event) {
     const file = event.target.files[0];
 
+    this.presentLoading();
     this.storageRef
       .ref(`pictures/upload/${file.name + '#' + this.current_datetime.getTime()}`)
       .put(file)
@@ -110,13 +112,13 @@ export class UploadPage implements OnInit {
         return snapshot.ref.getDownloadURL();
       })
       .then(downloadURL => {
-        console.log(downloadURL);//kaldırılacak
+        this.loadingController.dismiss();
         this.imageKey = downloadURL;
       })
   }
 
   async createPost() {
-
+    this.presentLoading();
     const image = this.imageKey;
     const desc = this.desc;
     const post_title = this.posttitle;
@@ -128,18 +130,14 @@ export class UploadPage implements OnInit {
       this.user.getUID(),
       this.user.getUsername(),
       cat_of_post);
-    // const ownerid = this.user.getUID();
-
-    await this.afstore.collection('posts').add(post)
+  await this.afstore.collection('posts').add(post)
       .then(res => {
         this.postid1 = res.id; //kullanıcının postlarını belirlemek için
+      this.loadingController.dismiss();
         this.router.navigate(['/newsdetail/' + this.postid1]);
       });
 
-    /*  this.afstore.doc(`posts/${this.postid1}`).update({
-       owner_id: this.user.getUID(),
-       owner_username: this.user.getUsername()
-     }) */
+
 
     const postid = this.postid1;
 
@@ -148,23 +146,6 @@ export class UploadPage implements OnInit {
         postid
       })
     })
-    /* 
-        var docRef = this.afstore.collection('posts');
-     */
-    // eski post pushlama kodu
-    // await docRef.get().subscribe(posts2 => {
-    //   if (!posts2.empty) {
-    //     posts2.forEach(doc => {
-    //       console.log(doc)
-    //       this.posts1.push(doc.data());
-    //     })
-    //   } else {
-    //     console.log("No such doc!");
-    //   }
-    // }, err => {
-    //   console.log("Error getting doc: ", err)
-    // })
-
     this.imageKey = '';
     this.desc = '';
     this.posttitle = '';
@@ -184,5 +165,15 @@ export class UploadPage implements OnInit {
     })
 
     await alert.present();
+  }
+  
+  async presentLoading() {
+    const loading = await this.loadingController.create({
+      message: 'Yükleniyor...'
+    });
+    await loading.present();
+
+    const { role, data } = await loading.onDidDismiss();
+    this.loadingController.dismiss();
   }
 }

@@ -16,8 +16,8 @@
         <ion-input type="text" placeholder="Enter title" [(ngModel)]="posttitle"></ion-input>
         <ion-textarea placeholder="Enter some description" [(ngModel)]="desc"></ion-textarea>
         <ion-select class="p-0 pl-2" placeholder="Select Category" [(ngModel)]="selectedcat">
-          <ion-select-option *ngFor="let cat of categories" value="{{cat.category}}">
-            {{cat.category_id}} - {{cat.category}}
+          <ion-select-option *ngFor="let cat of categories" value="{{cat.category_id}}-{{cat.category_title}}">
+            {{cat.category_id}} - {{cat.category_title}}
           </ion-select-option>
         </ion-select>
         <div class="row ion-margin-top">
@@ -37,7 +37,7 @@
           <div class="col-6">
           </div>
         </div>
-        <ion-button shape="round" class="btn-block" color="primary" (click)="createPost()">Share</ion-button>
+        <ion-button shape="round" class="btn-block" color="primary" (click)="createPost()">Paylaş</ion-button>
       </ion-card-content>
     </ion-card>
   </div>

@@ -1,20 +1,14 @@
 <ion-header>
   <ion-toolbar>
+    <ion-title>{{categoryName}}</ion-title>
     <ion-buttons slot="start">
-      <ion-menu-button></ion-menu-button>
+      <ion-back-button defaultHref="home"></ion-back-button>
     </ion-buttons>
-    <ion-title>Haberler</ion-title>
   </ion-toolbar>
 </ion-header>
 <ion-content>
-  <ion-card>
-    <ion-card-header (click)="presentModal()">
-      Bu uygulamayı değerlendirmek için tıklayın
-    </ion-card-header>
-  </ion-card>
-  <h6 class="m-2">Genel Haberler</h6>
-  <ion-card *ngFor="let post of userPosts"><!-- News -->
-    <ion-card-content (click)="goDetails(post.id)">
+  <ion-card *ngFor="let post of posts">
+    <ion-card-content *ngIf="post" (click)="goDetails(post.id)">
       <div class="row">
         <div class="col-9">
           <ion-card-title>{{ post.post_title }}</ion-card-title>
@@ -44,4 +38,15 @@
       </div>
     </ion-card-content>
   </ion-card>
+  <!-- <div class="cont" *ngFor="let post of userPosts">
+    <ion-card>
+      <ion-img [src]="post.image" [alt]=""></ion-img>
+      <ion-card-header>
+        <ion-card-title>{{ post.post_title }}</ion-card-title>
+        <ion-card-subtitle>Category: {{post.cat_of_post}}</ion-card-subtitle>
+        <ion-card-subtitle>Posted by {{post.owner_mail}}</ion-card-subtitle>
+      </ion-card-header>
+      <ion-card-content>{{post.desc}}</ion-card-content>
+    </ion-card>
+  </div> -->
 </ion-content>

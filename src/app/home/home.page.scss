@@ -2,19 +2,18 @@ $fontsize : 12px;
 ion-content{
     ion-card{
         ion-card-title,
-        ion-card-content
-        {
+        ion-card-content{
             font-size: $fontsize;
         }
         ion-card-title{
             font-weight: 600;       
         }
         ion-card-content{
-            font-weight: 100; 
+            font-weight: 300; 
         }
     }
     .writer{
         font-size: $fontsize;
-        font-weight: 200
+        font-weight: 450;
     }
 }

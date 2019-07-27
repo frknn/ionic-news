@@ -27,11 +27,9 @@ export class ProfilePage implements OnInit {
   ngOnInit() {
     this.afs.doc<Object>(`users/${this.user.getUID()}`).valueChanges()
       .subscribe(mydata => {
-        console.log(mydata);
         this.userName = mydata["name"]
         this.userLastname = mydata["lastname"]
         if(mydata["posts"]){
-          console.log(mydata["posts"].length);
           if(mydata["posts"].length>=5){
             this.userRank = "../assets/icon/goldMedal.png"
             this.userRankTitle = "Gold Author"

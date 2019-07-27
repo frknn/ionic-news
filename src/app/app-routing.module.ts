@@ -16,11 +16,14 @@ const routes: Routes = [
     path: 'profile',
     loadChildren: './profile/profile.module#ProfilePageModule'
   },
-  { path: 'logout', loadChildren: './pages/logout/logout.module#LogoutPageModule' },
+  { path: 'logout', loadChildren: './pages/logout/logout.module#LogoutPageModule'},
   { path: 'login', loadChildren: './login/login.module#LoginPageModule' },
   { path: 'register', loadChildren: './register/register.module#RegisterPageModule' },
   { path: 'tabs', loadChildren: './tabs/tabs.module#TabsPageModule' },
-  { path: 'newsdetail/:id', loadChildren: './pages/newsdetail/newsdetail.module#NewsdetailPageModule' }
+  { path: 'newsdetail/:id', loadChildren: './pages/newsdetail/newsdetail.module#NewsdetailPageModule' },
+  { path: 'categorynews/:id', loadChildren: './pages/categorynews/categorynews.module#CategorynewsPageModule' },  { path: 'rateusmodal', loadChildren: './pages/rateusmodal/rateusmodal.module#RateusmodalPageModule' }
+
+
 
 ];
 

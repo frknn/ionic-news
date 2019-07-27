@@ -1,0 +1,13 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Değerlendir</ion-title>
+    <ion-buttons slot="end">
+        <ion-button (click)="closeModal()">Kapat</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+    <ion-textarea class="textarea" placeholder="Açıklama" [(ngModel)]="content"></ion-textarea>
+    <ion-button ion-button-color="secondary" (click)="kaydet()" outline full>Kaydet</ion-button>
+</ion-content>
