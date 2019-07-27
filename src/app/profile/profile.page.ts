@@ -27,6 +27,7 @@ export class ProfilePage implements OnInit {
   ngOnInit() {
     this.afs.doc<Object>(`users/${this.user.getUID()}`).valueChanges()
       .subscribe(mydata => {
+        if(mydata!==undefined){
         this.userName = mydata["name"]
         this.userLastname = mydata["lastname"]
         if(mydata["posts"]){
@@ -44,6 +45,7 @@ export class ProfilePage implements OnInit {
           this.userRank = "../assets/icon/bronzeMedal.png"
           this.userRankTitle = "Bronze Author"
         }
+      }
       })
 
       
@@ -51,7 +53,7 @@ export class ProfilePage implements OnInit {
 
   async updateName() {
     var self = this;
-    await this.afs.doc(`users/${this.user.getUID()}`).update(
+    await this.afs.doc(`users/${this.user.getUID()}`).set(
       {
         name: this.userName,
         lastname: this.userLastname
